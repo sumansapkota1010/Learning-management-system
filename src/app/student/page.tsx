@@ -1,10 +1,10 @@
-import AdminSidebar from "../sidebar/Admin-Sidebar";
+import StudentSidebar from "@/components/sidebar/Student-Sidebar";
 
-function Dashboard({ children }: Readonly<{ children: React.ReactNode }>) {
+function Student() {
   return (
-    <div className="flex h-screen bg-gray-400">
+    <div className="flex h-screen bg-gray-100">
       {/* sidebar */}
-      <AdminSidebar />
+      <StudentSidebar />
       {/* Main content */}
       <div className="flex flex-col flex-1 overflow-y-auto">
         <div className="flex items-center justify-between h-16 bg-white border-b border-gray-200">
@@ -50,10 +50,13 @@ function Dashboard({ children }: Readonly<{ children: React.ReactNode }>) {
             </button>
           </div>
         </div>
-        <div className="p-4">{children}</div>
+        <div className="p-4">
+          <h1 className="text-2xl font-bold">Welcome to Daystar Daycare </h1>
+          <p className="mt-2 text-gray-600">Raising tomorrow's leaders.</p>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Dashboard;
+export default Student;

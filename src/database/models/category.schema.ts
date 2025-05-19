@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-interface ICategory extends Document {
+export interface ICategory extends Document {
   name: string;
   description?: string;
   createdAt: Date;

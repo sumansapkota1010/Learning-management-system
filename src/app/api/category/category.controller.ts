@@ -5,7 +5,6 @@ import { NextRequest } from "next/server";
 
 export async function createCategory(req: Request) {
   try {
-    const response = authMiddleware(req as NextRequest);
     await connectDb();
     const { name, description } = await req.json();
 
@@ -44,19 +43,14 @@ export async function createCategory(req: Request) {
 export async function getCategory(req: Request) {
   try {
     await connectDb();
-    const category = await Category.find();
-    if (category.length == 0) {
-      return Response.json(
-        {
-          message: "No categories found ",
-        },
-        { status: 400 }
-      );
-    }
-    return Response.json({
-      message: "Categories fetch successfully",
-      data: category,
-    });
+    const categories = await Category.find();
+    return Response.json(
+      {
+        message: "Categories fetched successfully",
+        data: categories,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return Response.json(
@@ -67,7 +61,6 @@ export async function getCategory(req: Request) {
     );
   }
 }
-
 export async function deleteCategory(req: Request) {
   try {
     await connectDb();
