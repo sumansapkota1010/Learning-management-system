@@ -3,33 +3,18 @@
 import { useEffect, useState } from "react";
 import type { Category } from "../../../../types/category";
 import Modal from "../components/modal/Modal";
-
-async function fetchCategories() {
-  const res = await fetch("http://localhost:3000/api/category");
-  console.log(res);
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  const responseData = await res.json();
-  console.log("API Response", responseData);
-  return responseData;
-}
+import { fetchCategories } from "@/store/category/categorySlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+
+  const dispatch = useAppDispatch();
+
+  const { categories, status } = useAppSelector((store) => store.category);
 
   useEffect(() => {
-    const getCategories = async () => {
-      try {
-        const response = await fetchCategories();
-        setCategories(response.data);
-        console.log("Categories set:", response.data);
-      } catch (error) {
-        console.log("Error fetching categories", error);
-      }
-    };
-    getCategories();
+    dispatch(fetchCategories());
   }, []);
 
   const openModal = () => {
