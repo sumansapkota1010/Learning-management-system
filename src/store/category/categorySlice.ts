@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICategoryInitialState, Status } from "./types";
 import { AppDispatch } from "../store";
-import axios from "axios";
+
 import API from "@/http";
 
 const datas: ICategoryInitialState = {
@@ -22,7 +22,7 @@ const categorySlice = createSlice({
     addCategories(state, action) {
       state.categories.push(action.payload);
     },
-    deleteCategories(state, action) {
+    deleteCategoryByIndex(state, action) {
       state.categories = state.categories.filter(
         (category) => category._id !== action.payload
       );
@@ -38,7 +38,7 @@ export const {
   setCategories,
   resetStatus,
   addCategories,
-  deleteCategories,
+  deleteCategoryByIndex,
 } = categorySlice.actions;
 
 export default categorySlice.reducer;
@@ -86,10 +86,10 @@ export function addCategory(data: Data) {
 export function deleteCategory(id: string) {
   return async function deleteCategoryThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.delete("/category" + id);
+      const response = await API.delete("/category/" + id);
       if (response.status == 200) {
         dispatch(setStatus(Status.Success));
-        dispatch(deleteCategories(id));
+        dispatch(deleteCategoryByIndex(id));
       } else {
         dispatch(setStatus(Status.Error));
       }

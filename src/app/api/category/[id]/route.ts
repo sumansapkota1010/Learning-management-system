@@ -1,9 +1,9 @@
 import { deleteCategory } from "../category.controller";
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
-  return deleteCategory(id);
+  const { id } = await params;
+  return deleteCategory(request, id);
 }

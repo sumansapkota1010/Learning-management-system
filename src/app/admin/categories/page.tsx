@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import Modal from "../components/modal/Modal";
 import {
-  deleteCategories,
+  deleteCategory,
   fetchCategories,
 } from "@/store/category/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -27,9 +27,9 @@ function Categories() {
     setIsModalOpen(false);
   };
 
-  const deleteCategory = (id: string) => {
+  const deleteCat = (id: string) => {
     if (id) {
-      dispatch(deleteCategories(id));
+      dispatch(deleteCategory(id));
       console.log("Button clicked");
     }
   };
@@ -171,7 +171,7 @@ function Categories() {
                             </svg>
                           </button>
                           <button
-                            onClick={() => deleteCategory(category._id)}
+                            onClick={() => deleteCat(category._id)}
                             className="p-2 rounded-full  group transition-all duration-500  flex item-center"
                           >
                             <svg

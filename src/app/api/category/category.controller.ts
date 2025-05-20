@@ -62,7 +62,7 @@ export async function getCategory(req: Request) {
     );
   }
 }
-export async function deleteCategoryHandler(req: Request, id: string) {
+export async function deleteCategory(req: Request, id: string) {
   try {
     await connectDb();
     const deleted = await Category.findByIdAndDelete(id);
