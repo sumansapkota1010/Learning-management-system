@@ -19,13 +19,14 @@ export async function createCategory(req: Request) {
       );
     }
 
-    await Category.create({
+    const category = await Category.create({
       name: name,
       description: description,
     });
     return Response.json(
       {
         message: "Category created successfully",
+        data: category,
       },
       { status: 201 }
     );
@@ -61,8 +62,31 @@ export async function getCategory(req: Request) {
     );
   }
 }
-export async function deleteCategory(req: Request) {
+export async function deleteCategoryHandler(req: Request, id: string) {
   try {
     await connectDb();
-  } catch (error) {}
+    const deleted = await Category.findByIdAndDelete(id);
+    if (!deleted) {
+      return Response.json(
+        {
+          message: "Something went wrong",
+        },
+        { status: 400 }
+      );
+    }
+    return Response.json(
+      {
+        message: "Category Deleted Successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
 }

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { ICategoryInitialState, Status } from "./types";
 import { AppDispatch } from "../store";
 import axios from "axios";
+import API from "@/http";
 
 const datas: ICategoryInitialState = {
   categories: [],
@@ -13,25 +14,82 @@ const categorySlice = createSlice({
   initialState: datas,
   reducers: {
     setStatus(state, action) {
-      state.categories = action.payload;
+      state.status = action.payload;
     },
     setCategories(state, action) {
       state.categories = action.payload;
     },
+    addCategories(state, action) {
+      state.categories.push(action.payload);
+    },
+    deleteCategories(state, action) {
+      state.categories = state.categories.filter(
+        (category) => category._id !== action.payload
+      );
+    },
+    resetStatus(state) {
+      state.status = Status.Loading;
+    },
   },
 });
 
-const { setStatus, setCategories } = categorySlice.actions;
+export const {
+  setStatus,
+  setCategories,
+  resetStatus,
+  addCategories,
+  deleteCategories,
+} = categorySlice.actions;
 
 export default categorySlice.reducer;
 
-function fetchCategories() {
+export function fetchCategories() {
   return async function fetchCategoriesThunk(dispatch: AppDispatch) {
     try {
-      const response = await axios.get("http://localhost:3000/api/category");
+      const response = await API.get("/category");
+      if (response.status == 200) {
+        /*     dispatch(setStatus(Status.Success)); */
+
+        dispatch(setCategories(response.data.data));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+type Data = {
+  name: string;
+  description: string;
+};
+
+export function addCategory(data: Data) {
+  return async function addCategoryThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.post("/category", data);
+      if (response.status === 201) {
+        dispatch(setStatus(Status.Success));
+        dispatch(addCategories(response.data.data));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+export function deleteCategory(id: string) {
+  return async function deleteCategoryThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.delete("/category" + id);
       if (response.status == 200) {
         dispatch(setStatus(Status.Success));
-        dispatch(setCategories(response.data.data));
+        dispatch(deleteCategories(id));
       } else {
         dispatch(setStatus(Status.Error));
       }

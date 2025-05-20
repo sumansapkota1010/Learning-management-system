@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { addCategory, resetStatus } from "@/store/category/categorySlice";
+import { Status } from "@/store/category/types";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useEffect, useState } from "react";
 
 interface IModalProps {
   closeModal: () => void;
@@ -11,29 +14,22 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const { status } = useAppSelector((state) => state.category);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      setLoading(true);
-      const response = await fetch("http://localhost:3000/api/category", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, description }),
-      });
-      if (response.ok) {
-        setLoading(false);
-        alert("Category created successfully");
-        closeModal();
-      } else {
-        alert("Something went wrong");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    setLoading(true);
+    dispatch(addCategory({ name, description }));
   };
+
+  useEffect(() => {
+    if (status === Status.Success) {
+      setLoading(false);
+      closeModal();
+      dispatch(resetStatus());
+    }
+  }, [status]);
 
   return (
     <div
