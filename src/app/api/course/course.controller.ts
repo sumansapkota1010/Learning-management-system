@@ -1,5 +1,6 @@
 import connectDb from "@/database/connection";
 import Course from "@/database/models/course.schema";
+import Lesson from "@/database/models/lesson.schema";
 
 export async function createCourse(req: Request) {
   try {
@@ -97,6 +98,8 @@ export async function deleteCourse(req: Request, id: string) {
     await connectDb();
 
     const deletedCourse = await Course.findByIdAndDelete(id);
+    //delete lessons too
+    await Lesson.deleteMany({ course: id });
     if (deletedCourse) {
       return Response.json(
         {

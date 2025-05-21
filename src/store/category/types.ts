@@ -15,8 +15,3 @@ export interface ICategoryInitialState {
   categories: ICategory[];
   status: Status;
 }
-
-export const datas: ICategoryInitialState = {
-  categories: [],
-  status: Status.Loading,
-};
