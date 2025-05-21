@@ -91,3 +91,68 @@ export async function singleCourse(req: Request, id: string) {
     );
   }
 }
+
+export async function deleteCourse(req: Request, id: string) {
+  try {
+    await connectDb();
+
+    const deletedCourse = await Course.findByIdAndDelete(id);
+    if (deletedCourse) {
+      return Response.json(
+        {
+          message: "Course deleted successfully",
+        },
+        { status: 200 }
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function editCourse(req: Request, id: string) {
+  try {
+    await connectDb();
+    const { title, description, price, duration, category } = await req.json();
+    const courseExists = await Course.findByIdAndUpdate(
+      id,
+      {
+        title,
+        description,
+        price,
+        duration,
+        category,
+      },
+      { new: true }
+    );
+    if (!courseExists) {
+      return Response.json(
+        {
+          message: "No course exists",
+        },
+        { status: 400 }
+      );
+    }
+    return Response.json(
+      {
+        message: "Course updated successfully",
+        data: courseExists,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
+}
