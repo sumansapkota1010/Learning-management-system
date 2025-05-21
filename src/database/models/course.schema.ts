@@ -13,9 +13,10 @@ interface ICourse extends Document {
 }
 
 const courseSchema = new Schema<ICourse>({
-  courseName: {
+  title: {
     type: String,
     required: true,
+    unique: true,
   },
   description: {
     type: String,
@@ -33,12 +34,12 @@ const courseSchema = new Schema<ICourse>({
     type: Schema.Types.ObjectId,
     ref: "Category",
   },
-  lessons: [
+  /* lessons: [
     {
       type: Schema.Types.ObjectId,
       ref: "Lessons",
     },
-  ],
+  ], */
   createdAt: {
     type: Date,
     default: Date.now(),
