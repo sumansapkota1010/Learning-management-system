@@ -90,3 +90,33 @@ export async function deleteCategory(req: Request, id: string) {
     );
   }
 }
+
+export async function editCategory(req: Request, id: string) {
+  try {
+    connectDb();
+    const { name, description } = await req.json();
+    const updatedCat = await Category.findByIdAndUpdate(
+      id,
+      {
+        name: name,
+        description: description,
+      },
+      { new: true }
+    );
+    return Response.json(
+      {
+        message: "Category edit Successfully",
+        data: updatedCat,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
+}

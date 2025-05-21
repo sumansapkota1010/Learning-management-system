@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Modal from "../components/modal/Modal";
 import {
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const dispatch = useAppDispatch();
 
@@ -20,12 +21,18 @@ function Categories() {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  /* const openModalRef = useRef<() => void | null>(null);
+  if (openModalRef.current) {
+    console.log(
+      "Function instance change vayo",
+      openModalRef.current !== openModal
+    );
+  }
+  openModalRef.current = openModal; */
 
   const deleteCat = (id: string) => {
     if (id) {
@@ -33,8 +40,11 @@ function Categories() {
       console.log("Button clicked");
     }
   };
-
   console.log(isModalOpen);
+
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex flex-col">
@@ -73,6 +83,7 @@ function Categories() {
             </div>
             <div className="flex justify-content-between">
               <input
+                onChange={(e) => setSearchTerm(e.target.value)}
                 type="text"
                 id="default-search"
                 className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none"
@@ -129,8 +140,8 @@ function Categories() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
-                {categories && categories.length > 0 ? (
-                  categories.map((category) => (
+                {filteredCategories && filteredCategories.length > 0 ? (
+                  filteredCategories.map((category) => (
                     <tr
                       key={category._id}
                       className="bg-white transition-all duration-500 hover:bg-gray-50"
