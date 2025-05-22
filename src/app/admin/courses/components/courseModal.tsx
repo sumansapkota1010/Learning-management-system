@@ -1,10 +1,28 @@
 "use client";
 
+import { ICourse } from "@/store/course/types";
+import { useAppDispatch } from "@/store/hooks";
+import { useState } from "react";
+
 interface IModalProps {
   closeModal: () => void;
 }
 
 const Modal: React.FC<IModalProps> = ({ closeModal }) => {
+  const [data, setData] = useState<ICourse>({
+    title: "",
+    description: "",
+    price: 0,
+    duration: "",
+    category: {
+      name: "",
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <div
       id="modal"
@@ -14,7 +32,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
       <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Add Category
+            Add Course
           </h3>
           <button
             onClick={closeModal}
@@ -46,10 +64,12 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 htmlFor="website_url"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Category Name
+                Course Title
               </label>
               <input
                 type="text"
+                name="title"
+                onChange={handleChange}
                 id="website_url"
                 className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="React,Next Js,Express.."
@@ -61,11 +81,60 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 htmlFor="website_url"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Category Description
+                Course Description
+              </label>
+              <input
+                type="text"
+                name="description"
+                id="website_url"
+                className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
+                placeholder="..."
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="website_url"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Course Price
+              </label>
+              <input
+                type="text"
+                name="price"
+                id="website_url"
+                className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
+                placeholder="..."
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="website_url"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Course Category
+              </label>
+              <input
+                type="text"
+                name="category"
+                id="website_url"
+                className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
+                placeholder="..."
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="website_url"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Course Duration
               </label>
               <input
                 type="text"
                 id="website_url"
+                name="duration"
                 className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="..."
                 required

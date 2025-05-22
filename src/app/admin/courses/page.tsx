@@ -107,6 +107,13 @@ function Courses() {
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
+                    Duration
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
+                  >
                     Created At
                   </th>
                   <th
@@ -140,11 +147,15 @@ function Courses() {
                         {course.description || "No description"}
                       </td>
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        {course.price ? `$${course.price}` : "N/A"}
+                        {course.price}
                       </td>
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        {course.category || "No category"}
+                        {course.category?.name || "No category"}
                       </td>
+                      <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                        {course.duration ? `${course.duration}` : "N/A"}
+                      </td>
+
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                         {course.createdAt
                           ? new Date(course.createdAt).toLocaleDateString()

@@ -1,13 +1,15 @@
 import { Status } from "../category/types";
 
 export interface ICourse {
-  _id: string;
+  _id?: string;
   title: string;
   description: string;
   price: number;
   duration: string;
-  category: string;
-  createdAt: Date;
+  category: {
+    name: string;
+  };
+  createdAt?: Date;
 }
 
 export interface ICourseInitialState {
