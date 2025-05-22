@@ -6,6 +6,12 @@ import { NextRequest } from "next/server";
 export async function createCategory(req: Request) {
   try {
     await connectDb();
+    const response = await authMiddleware(req as NextRequest);
+
+    if (response.status === 401) {
+      return response;
+    }
+
     const { name, description } = await req.json();
 
     //exist or not
@@ -65,6 +71,12 @@ export async function getCategory(req: Request) {
 export async function deleteCategory(req: Request, id: string) {
   try {
     await connectDb();
+    const response = await authMiddleware(req as NextRequest);
+
+    if (response.status === 401) {
+      return response;
+    }
+
     const deleted = await Category.findByIdAndDelete(id);
     if (!deleted) {
       return Response.json(
@@ -94,6 +106,11 @@ export async function deleteCategory(req: Request, id: string) {
 export async function editCategory(req: Request, id: string) {
   try {
     connectDb();
+    const response = await authMiddleware(req as NextRequest);
+
+    if (response.status === 401) {
+      return response;
+    }
     const { name, description } = await req.json();
     const updatedCat = await Category.findByIdAndUpdate(
       id,

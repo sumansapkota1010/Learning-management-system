@@ -34,6 +34,7 @@ export const authOptions: AuthOptions = {
     async jwt({ token }) {
       await connectDb();
       const userExists = await User.findOne({ email: token.email });
+      console.log(userExists, "Userr");
       if (userExists) {
         token.id = userExists._id;
         token.role = userExists.role;
@@ -45,6 +46,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }: { session: any; token: any }) {
       console.log(token.id, "token id");
       console.log(session, "Sessionnn");
+
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
