@@ -30,11 +30,24 @@ export const authOptions: AuthOptions = {
         return false;
       }
     },
-    async session({ session, user }: { session: any; user: any }) {
-      const data = await User.findOne({ email: session.user.email });
-      if (data) {
-        session.user.role = data.role || "student";
-        session.user.id = data._id.toString();
+
+    async jwt({ token }) {
+      await connectDb();
+      const userExists = await User.findOne({ email: token.email });
+      if (userExists) {
+        token.id = userExists._id;
+        token.role = userExists.role;
+      }
+
+      return token;
+    },
+
+    async session({ session, token }: { session: any; token: any }) {
+      console.log(token.id, "token id");
+      console.log(session, "Sessionnn");
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role;
       }
       return session;
     },

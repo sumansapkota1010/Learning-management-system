@@ -25,7 +25,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
 
   useEffect(() => {
     if (status === Status.Success) {
-      +setLoading(false);
+      setLoading(false);
       closeModal();
       dispatch(resetStatus());
     }
