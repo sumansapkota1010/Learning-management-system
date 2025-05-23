@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../category/types";
 import { ICourse, ICourseInitialState } from "./types";
 import { AppDispatch } from "../store";
@@ -20,10 +20,22 @@ const courseSlice = createSlice({
     setCourses(state: ICourseInitialState, action: PayloadAction<ICourse[]>) {
       state.courses = action.payload;
     },
+    addCourse(state, action) {
+      state.courses.push(action.payload);
+    },
+    deleteCourseByFilter(state, action) {
+      state.courses = state.courses.filter(
+        (course) => course._id !== action.payload
+      );
+    },
+    resetStatus(state) {
+      state.status = Status.Loading;
+    },
   },
 });
 
-const { setStatus, setCourses } = courseSlice.actions;
+const { setStatus, setCourses, addCourse, deleteCourseByFilter, resetStatus } =
+  courseSlice.actions;
 
 export default courseSlice.reducer;
 
@@ -38,6 +50,39 @@ export function fetchCourses() {
       }
     } catch (error) {
       console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+export function addCourses(data: ICourse) {
+  return async function addCoursesThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.post("/course", data);
+      if (response.status === 201) {
+        dispatch(setStatus(Status.Success));
+        dispatch(addCourse(response.data.data));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+export function deleteCourses(id: string) {
+  return async function deteteCoursesThunk(dispatch: Dispatch) {
+    try {
+      const response = await API.delete("/course/" + id);
+      if (response.status === 200) {
+        dispatch(setStatus(Status.Success));
+        dispatch(deleteCourseByFilter(id));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
       dispatch(setStatus(Status.Error));
     }
   };

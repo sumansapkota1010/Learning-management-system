@@ -6,10 +6,8 @@ export interface ICourse {
   description: string;
   price: number;
   duration: string;
-  category: {
-    name: string;
-  };
-  createdAt?: Date;
+  category: string;
+  createdAt?: string;
 }
 
 export interface ICourseInitialState {

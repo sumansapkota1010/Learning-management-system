@@ -22,7 +22,7 @@ const categorySlice = createSlice({
     addCategories(state, action) {
       state.categories.push(action.payload);
     },
-    deleteCategoryByIndex(state, action) {
+    deleteCategoryByFilter(state, action) {
       state.categories = state.categories.filter(
         (category) => category._id !== action.payload
       );
@@ -38,7 +38,7 @@ export const {
   setCategories,
   resetStatus,
   addCategories,
-  deleteCategoryByIndex,
+  deleteCategoryByFilter,
 } = categorySlice.actions;
 
 export default categorySlice.reducer;
@@ -89,7 +89,7 @@ export function deleteCategory(id: string) {
       const response = await API.delete("/category/" + id);
       if (response.status == 200) {
         dispatch(setStatus(Status.Success));
-        dispatch(deleteCategoryByIndex(id));
+        dispatch(deleteCategoryByFilter(id));
       } else {
         dispatch(setStatus(Status.Error));
       }
