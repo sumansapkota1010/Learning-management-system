@@ -7,13 +7,16 @@ export async function createCourse(req: Request) {
     connectDb();
     const { title, description, price, duration, category } = await req.json();
 
-    const course = await Course.create({
+    const createdCourse = await Course.create({
       title,
       description,
       price,
       duration,
       category,
     });
+    const course = await Course.findById(createdCourse._id).populate(
+      "category"
+    );
     return Response.json(
       {
         message: "Course created successfully",

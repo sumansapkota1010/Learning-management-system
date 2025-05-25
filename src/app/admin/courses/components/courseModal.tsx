@@ -1,7 +1,8 @@
 "use client";
 
-import { fetchCategories, resetStatus } from "@/store/category/categorySlice";
-import { addCourses } from "@/store/course/courseSlice";
+import { fetchCategories } from "@/store/category/categorySlice";
+import { Status } from "@/store/category/types";
+import { addCourses, resetCourseStatus } from "@/store/course/courseSlice";
 import { ICourse } from "@/store/course/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -21,6 +22,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
 
   const dispatch = useAppDispatch();
   const { categories } = useAppSelector((state) => state.category);
+  const { status } = useAppSelector((state) => state.course);
 
   useEffect(() => {
     if (categories.length == 0) {
@@ -34,7 +36,9 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
     e.preventDefault();
     dispatch(addCourses(data));
     closeModal();
-    dispatch(resetStatus());
+    dispatch(resetCourseStatus());
+
+    console.log(status);
   }
 
   const handleChange = (
@@ -43,8 +47,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
     >
   ) => {
     const { name, value } = e.target;
-    console.log(name, "name");
-    console.log(value, "value");
+
     setData({ ...data, [name]: value });
   };
 
@@ -109,7 +112,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 Course Duration
               </label>
               <input
-                type="number"
+                type="text"
                 name="duration"
                 onChange={handleChange}
                 placeholder="e.g. 4 weeks"
@@ -118,17 +121,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
               />
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Course Category
-            </label>
-            <select
-              name="category"
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-              required
-            ></select>
-          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Course Description
@@ -141,6 +134,30 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
               required
             />
+          </div>
+          <div>
+            <label
+              htmlFor="website_url"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Category{" "}
+            </label>
+            <select
+              name="category"
+              onChange={handleChange}
+              id="website_url"
+              className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
+              required
+            >
+              {categories.length &&
+                categories.map((category) => {
+                  return (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  );
+                })}
+            </select>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">

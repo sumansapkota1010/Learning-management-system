@@ -4,12 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 import Modal from "./components/courseModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { deleteCourses, fetchCourses } from "@/store/course/courseSlice";
+import { redirect } from "next/navigation";
 
 function Courses() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const dispatch = useAppDispatch();
 
   const { courses, status } = useAppSelector((state) => state.course);
+
+  console.log("Courses ma k xa", courses);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
 
@@ -27,6 +31,9 @@ function Courses() {
     }
   };
 
+  const filteredCourse = courses.filter((course) =>
+    course.title.toLowerCase().includes(searchText.toLowerCase())
+  );
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto">
@@ -64,6 +71,7 @@ function Courses() {
             </div>
             <div className="flex justify-content-between">
               <input
+                onChange={(e) => setSearchText(e.target.value)}
                 type="text"
                 id="default-search"
                 className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none"
@@ -103,6 +111,12 @@ function Courses() {
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
+                    Category
+                  </th>
+                  <th
+                    scope="col"
+                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
+                  >
                     Created At
                   </th>
 
@@ -115,14 +129,19 @@ function Courses() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
-                {courses.length > 0 ? (
-                  courses.map((course) => {
+                {filteredCourse.length > 0 ? (
+                  filteredCourse.map((course) => {
                     return (
                       <tr
                         key={course._id}
                         className="bg-white transition-all duration-500 hover:bg-gray-50"
                       >
-                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
+                        <td
+                          onClick={() =>
+                            redirect(`/admin/courses/${course._id}/lessons`)
+                          }
+                          className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 cursor-pointer "
+                        >
                           {course?.title}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
@@ -133,6 +152,11 @@ function Courses() {
                           {" "}
                           {course?.duration}
                         </td>
+                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                          {" "}
+                          {course?.category.name}
+                        </td>
+
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {new Date(
                             course.createdAt?.toString() ?? ""

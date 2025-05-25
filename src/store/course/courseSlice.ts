@@ -20,22 +20,30 @@ const courseSlice = createSlice({
     setCourses(state: ICourseInitialState, action: PayloadAction<ICourse[]>) {
       state.courses = action.payload;
     },
-    addCourse(state, action) {
+    addCourse(state: ICourseInitialState, action: PayloadAction<ICourse>) {
       state.courses.push(action.payload);
     },
-    deleteCourseByFilter(state, action) {
+    deleteCourseByFilter(
+      state: ICourseInitialState,
+      action: PayloadAction<string>
+    ) {
       state.courses = state.courses.filter(
         (course) => course._id !== action.payload
       );
     },
-    resetStatus(state) {
+    resetCourseStatus(state) {
       state.status = Status.Loading;
     },
   },
 });
 
-const { setStatus, setCourses, addCourse, deleteCourseByFilter, resetStatus } =
-  courseSlice.actions;
+export const {
+  setStatus,
+  setCourses,
+  addCourse,
+  deleteCourseByFilter,
+  resetCourseStatus,
+} = courseSlice.actions;
 
 export default courseSlice.reducer;
 
@@ -45,7 +53,6 @@ export function fetchCourses() {
       const response = await API.get("/course");
       console.log(response, "Response");
       if (response.status === 200) {
-        dispatch(setStatus(Status.Success));
         dispatch(setCourses(response.data.data));
       }
     } catch (error) {
