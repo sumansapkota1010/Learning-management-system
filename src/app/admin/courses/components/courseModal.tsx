@@ -25,7 +25,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
   const { status } = useAppSelector((state) => state.course);
 
   useEffect(() => {
-    if (categories.length == 0) {
+    if (categories.length === 0) {
       dispatch(fetchCategories());
     } else {
       console.log("No more fetch");
@@ -47,8 +47,11 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
     >
   ) => {
     const { name, value } = e.target;
-
     setData({ ...data, [name]: value });
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setData({ ...data, category: e.target.value });
   };
 
   return (
@@ -135,28 +138,35 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
               required
             />
           </div>
+
           <div>
             <label
-              htmlFor="website_url"
+              htmlFor="category"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              Category{" "}
+              Category
             </label>
             <select
               name="category"
-              onChange={handleChange}
-              id="website_url"
+              id="category"
+              onChange={handleCategoryChange}
               className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
               required
+              value={
+                typeof data.category === "string"
+                  ? data.category
+                  : data.category._id
+              }
             >
-              {categories.length &&
-                categories.map((category) => {
-                  return (
-                    <option key={category._id} value={category._id}>
-                      {category.name}
-                    </option>
-                  );
-                })}
+              <option value="" disabled>
+                -- Select Category --
+              </option>
+              {categories.length > 0 &&
+                categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
+                  </option>
+                ))}
             </select>
           </div>
 

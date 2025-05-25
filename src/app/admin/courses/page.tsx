@@ -12,6 +12,7 @@ function Courses() {
   const dispatch = useAppDispatch();
 
   const { courses, status } = useAppSelector((state) => state.course);
+  const { categories } = useAppSelector((state) => state.category);
 
   console.log("Courses ma k xa", courses);
 
@@ -153,10 +154,11 @@ function Courses() {
                           {course?.duration}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                          {" "}
-                          {course?.category.name}
+                          {typeof course.category === "string"
+                            ? categories.find((c) => c._id === course.category)
+                                ?.name || "Uncategorized"
+                            : course.category.name}
                         </td>
-
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {new Date(
                             course.createdAt?.toString() ?? ""
@@ -206,7 +208,7 @@ function Courses() {
                 ) : (
                   <tr>
                     <td colSpan={5} className="p-5 text-center">
-                      No categories found
+                      No courses found
                     </td>
                   </tr>
                 )}

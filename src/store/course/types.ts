@@ -13,7 +13,7 @@ export interface ICourse {
   description: string;
   price: number;
   duration: string;
-  category: ICategory | string;
+  category: string | ICategory;
   createdAt?: string;
 }
 
