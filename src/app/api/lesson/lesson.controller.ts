@@ -1,6 +1,7 @@
 import connectDb from "@/database/connection";
 import Course from "@/database/models/course.schema";
 import Lesson from "@/database/models/lesson.schema";
+import { NextResponse } from "next/server";
 
 export async function createLesson(req: Request) {
   try {
@@ -12,7 +13,7 @@ export async function createLesson(req: Request) {
       videoUrl,
       course,
     });
-    return Response.json(
+    return NextResponse.json(
       {
         message: "Lesson created successfully",
         data: lesson,
@@ -21,7 +22,7 @@ export async function createLesson(req: Request) {
     );
   } catch (error) {
     console.log(error);
-    return Response.json(
+    return NextResponse.json(
       {
         message: "Something went wrong",
       },
@@ -30,22 +31,25 @@ export async function createLesson(req: Request) {
   }
 }
 
-export async function fetchLesson(req: Request) {
+export async function fetchLessons(req: Request) {
   try {
     await connectDb();
-    const lessons = await Lesson.find().populate({
-      path: "course",
-      model: Course,
-    });
-    if (lessons.length == 0) {
-      return Response.json(
+    const { searchParams } = new URL(req.url);
+    const courseId = searchParams.get("courseId");
+
+    const lessons = await Lesson.find({ course: courseId }).populate("course");
+
+    if (lessons.length === 0) {
+      return NextResponse.json(
         {
-          message: "No lesson  found",
+          message: "No lesson found",
+          lessons: [],
         },
         { status: 404 }
       );
     }
-    return Response.json(
+
+    return NextResponse.json(
       {
         message: "Lessons fetched successfully",
         data: lessons,
@@ -54,7 +58,37 @@ export async function fetchLesson(req: Request) {
     );
   } catch (error) {
     console.log(error);
-    return Response.json(
+    return NextResponse.json(
+      {
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function fetchLesson(req: Request, id: string) {
+  try {
+    await connectDb();
+    const lesson = await Lesson.findById(id);
+    if (!lesson) {
+      return NextResponse.json(
+        {
+          message: "No lesson found with that ID",
+        },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      {
+        message: "Lesson fetched successfully",
+        data: lesson,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
       {
         message: "Something went wrong",
       },
@@ -67,17 +101,24 @@ export async function deleteLesson(req: Request, id: string) {
   try {
     await connectDb();
     const deletedLesson = await Lesson.findByIdAndDelete(id);
-    if (deletedLesson) {
-      return Response.json(
+    if (!deletedLesson) {
+      return NextResponse.json(
         {
-          message: "Lesson deleted successfully",
+          message: "Lesson not found",
         },
-        { status: 200 }
+        { status: 404 }
       );
     }
+
+    return NextResponse.json(
+      {
+        message: "Lesson deleted successfully",
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
-    return Response.json(
+    return NextResponse.json(
       {
         message: "Something went wrong",
       },
