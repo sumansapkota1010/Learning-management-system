@@ -43,7 +43,7 @@ export async function fetchLessons(req: Request) {
       return NextResponse.json(
         {
           message: "No lesson found",
-          lessons: [],
+          data: [],
         },
         { status: 404 }
       );

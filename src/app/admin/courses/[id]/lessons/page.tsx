@@ -26,6 +26,14 @@ function Lessons() {
   const handleDelete = (id: string) => {
     id && dispatch(deleteLesson(id));
   };
+
+  const getYouTubeId = (url: string) => {
+    const regExp =
+      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?.+&v=)([^#&?]{11}).*/;
+    const match = url?.match(regExp);
+    return match ? match[1] : null;
+  };
+
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
@@ -102,6 +110,13 @@ function Lessons() {
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
                     {" "}
+                    Video{" "}
+                  </th>
+                  <th
+                    scope="col"
+                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
+                  >
+                    {" "}
                     Created At{" "}
                   </th>
                   <th
@@ -129,6 +144,24 @@ function Lessons() {
                           {" "}
                           {lesson?.title}
                         </td>
+                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                          {lesson?.videoUrl && getYouTubeId(lesson.videoUrl) ? (
+                            <iframe
+                              width="150"
+                              height="150"
+                              src={`https://www.youtube.com/embed/${getYouTubeId(
+                                lesson.videoUrl
+                              )}`}
+                              title="YouTube video player"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            ></iframe>
+                          ) : (
+                            <span>No video available</span>
+                          )}
+                        </td>
+
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
                           {lesson?.createdAt
