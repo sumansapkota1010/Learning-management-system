@@ -28,6 +28,7 @@ const enrollmentSchema = new Schema<IEnrollment>({
     default: Date.now(),
   },
   enrollmentStatus: {
+    type: String,
     enum: [
       EnrollmentStatus.Approve,
       EnrollmentStatus.Pending,
