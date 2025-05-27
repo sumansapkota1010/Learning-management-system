@@ -52,6 +52,7 @@ export function editEnrollmentStatus(id: string, status: EnrollmentStatus) {
   return async function editEnrollmentStatusThunk(dispatch: AppDispatch) {
     try {
       const response = await API.patch(`/enrollment/${id}`, { status: status });
+
       console.log(response.data.data);
     } catch (error) {}
   };

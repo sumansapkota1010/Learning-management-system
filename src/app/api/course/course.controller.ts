@@ -1,6 +1,9 @@
 import connectDb from "@/database/connection";
 import Course from "@/database/models/course.schema";
 import Lesson from "@/database/models/lesson.schema";
+import Category from "@/database/models/category.schema";
+
+import mongoose from "mongoose";
 
 export async function createCourse(req: Request) {
   try {
@@ -38,20 +41,20 @@ export async function createCourse(req: Request) {
 export async function fetchCourse(req: Request) {
   try {
     await connectDb();
-
-    const courses = await Course.find().populate("category");
-    if (courses.length == 0) {
+    console.log(mongoose.models.Category, "MMC");
+    const data = await Course.find().populate("category");
+    if (data.length === 0) {
       return Response.json(
         {
-          message: "No course found",
+          message: "no course found",
         },
-        { status: 400 }
+        { status: 404 }
       );
     }
     return Response.json(
       {
-        message: "Courses fetched successfully",
-        data: courses,
+        message: "courses fetched!!",
+        data,
       },
       { status: 200 }
     );
