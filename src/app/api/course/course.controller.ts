@@ -1,7 +1,7 @@
+import "../../../database/models/category.schema";
 import connectDb from "@/database/connection";
 import Course from "@/database/models/course.schema";
 import Lesson from "@/database/models/lesson.schema";
-import Category from "@/database/models/category.schema";
 
 import mongoose from "mongoose";
 

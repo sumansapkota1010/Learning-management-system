@@ -154,10 +154,7 @@ function Courses() {
                           {course?.duration}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                          {typeof course.category === "string"
-                            ? categories.find((c) => c._id === course.category)
-                                ?.name || "Uncategorized"
-                            : course.category.name}
+                          {course?.category.name}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {new Date(

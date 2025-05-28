@@ -1,4 +1,5 @@
 import mongoose, { mongo, Schema } from "mongoose";
+import { PaymentMethod } from "../../../types/enum";
 
 enum Status {
   Pending = "pending",
@@ -11,6 +12,7 @@ interface IPayment extends Document {
   course: mongoose.Types.ObjectId;
   amount: number;
   status: Status;
+  paymentMethod: PaymentMethod;
 }
 
 const paymentSchema = new Schema<IPayment>({
@@ -30,6 +32,11 @@ const paymentSchema = new Schema<IPayment>({
     type: String,
     enum: [Status.Completed, Status.Pending, Status.Failed],
     default: Status.Pending,
+  },
+  paymentMethod: {
+    type: String,
+    enum: [PaymentMethod.Khalti, PaymentMethod.Esewa],
+    default: PaymentMethod.Khalti,
   },
 });
 

@@ -12,7 +12,7 @@ interface IModalProps {
 }
 
 const Modal: React.FC<IModalProps> = ({ closeModal }) => {
-  const [data, setData] = useState<ICourse>({
+  const [data, setData] = useState<ICourse | any>({
     title: "",
     description: "",
     price: 0,

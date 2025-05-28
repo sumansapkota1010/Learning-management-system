@@ -1,6 +1,6 @@
 import { Status } from "../category/types";
 
-interface ICategory {
+export interface ICategory {
   _id: string;
   name: string;
   description: string;
@@ -13,7 +13,7 @@ export interface ICourse {
   description: string;
   price: number;
   duration: string;
-  category: string | ICategory;
+  category: ICategory;
   createdAt?: string;
 }
 
