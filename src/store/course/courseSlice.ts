@@ -11,12 +11,6 @@ const datas: ICourseInitialState = {
   status: Status.Loading,
 };
 
-export interface IEnrollmentData {
-  whatsapp: string;
-  course: string;
-  paymentMethod: PaymentMethod;
-}
-
 const courseSlice = createSlice({
   name: "course",
   initialState: datas,
@@ -93,21 +87,6 @@ export function deleteCourses(id: string) {
       if (response.status === 200) {
         dispatch(setStatus(Status.Success));
         dispatch(deleteCourseByFilter(id));
-      } else {
-        dispatch(setStatus(Status.Error));
-      }
-    } catch (error) {
-      dispatch(setStatus(Status.Error));
-    }
-  };
-}
-
-export function enrollCourse(data: IEnrollmentData) {
-  return async function enrollCourseThunk(dispatch: AppDispatch) {
-    try {
-      const response = await API.post("/enrollment", data);
-      if (response.status === 200) {
-        dispatch(setStatus(Status.Success));
       } else {
         dispatch(setStatus(Status.Error));
       }

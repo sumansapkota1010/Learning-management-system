@@ -10,6 +10,7 @@ import { PaymentMethod } from "../../../types/enum";
 const Datas: IEnrollmentInitialState = {
   enrollments: [],
   status: Status.Loading,
+  paymentUrl: null,
 };
 
 export interface IEnrollmentData {
@@ -32,10 +33,14 @@ const enrollmentSlice = createSlice({
     ) {
       state.enrollments = action.payload;
     },
+    setPaymentUrl(state, action) {
+      state.paymentUrl = action.payload;
+    },
   },
 });
 
-export const { setStatus, setEnrollment } = enrollmentSlice.actions;
+export const { setStatus, setEnrollment, setPaymentUrl } =
+  enrollmentSlice.actions;
 export default enrollmentSlice.reducer;
 
 export function enrollCourse(data: IEnrollmentData) {
@@ -44,6 +49,7 @@ export function enrollCourse(data: IEnrollmentData) {
       const response = await API.post("/enrollment", data);
       if (response.status === 200) {
         dispatch(setStatus(Status.Success));
+        window.location.href = response.data.data.paymentUrl;
       } else {
         dispatch(setStatus(Status.Error));
       }
@@ -57,9 +63,14 @@ export function fetchEnrollments() {
   return async function fetchEnrollmentsThunk(dispatch: AppDispatch) {
     try {
       const response = await API.get("/enrollment");
+      console.log(response.data.data.paymentUrl, "Payment ulr data");
       if (response.status === 200) {
         dispatch(setStatus(Status.Success));
         dispatch(setEnrollment(response.data.data));
+
+        if (response.data.data.paymentUrl) {
+          dispatch(setPaymentUrl(response.data.data.paymentUrl));
+        }
       } else {
         dispatch(setStatus(Status.Error));
       }

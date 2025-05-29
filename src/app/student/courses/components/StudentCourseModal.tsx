@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ChangeEvent, useEffect, useState } from "react";
 import { PaymentMethod } from "../../../../../types/enum";
 import { enrollCourse } from "@/store/enrollment/enrollmentSlice";
+import { Status } from "@/store/category/types";
 
 interface IModalProps {
   closeModal: () => void;
@@ -18,11 +19,16 @@ const Modal: React.FC<IModalProps> = ({ closeModal, courseId }) => {
   const [whatsapp, setWhatsapp] = useState<string>("");
   const dispatch = useAppDispatch();
 
-  console.log(courseId, "Course ko id");
+  const { status, paymentUrl } = useAppSelector((state) => state.enrollment);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(enrollCourse({ course: courseId, paymentMethod, whatsapp }));
+
+    if (status === Status.Success) {
+      setLoading(false);
+      closeModal();
+    }
   };
 
   const handlePaymentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

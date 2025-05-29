@@ -34,6 +34,9 @@ export async function enrollCourse(req: Request) {
     });
 
     const courseData = await Course.findById(course);
+
+    let paymentUrl;
+
     if (paymentMethod === PaymentMethod.Khalti) {
       const data = {
         return_url: "http://localhost:3000/",
@@ -53,6 +56,8 @@ export async function enrollCourse(req: Request) {
         }
       );
       console.log(response, "Response");
+      paymentUrl = response.data.payment_url;
+
       await Payment.create({
         enrollment: enrolledCourse._id,
         amount: courseData.price,
@@ -64,7 +69,10 @@ export async function enrollCourse(req: Request) {
     return Response.json(
       {
         message: "You enrolled the course",
-        data: enrolledCourse,
+        data: {
+          ...enrolledCourse,
+          paymentUrl,
+        },
       },
       { status: 200 }
     );
