@@ -5,11 +5,18 @@ import { IEnrollment, IEnrollmentInitialState } from "./types";
 import { AppDispatch } from "../store";
 import API from "@/http";
 import { stat } from "fs";
+import { PaymentMethod } from "../../../types/enum";
 
 const Datas: IEnrollmentInitialState = {
   enrollments: [],
   status: Status.Loading,
 };
+
+export interface IEnrollmentData {
+  whatsapp: string;
+  course: string;
+  paymentMethod: PaymentMethod;
+}
 
 const enrollmentSlice = createSlice({
   name: "enrollment",
@@ -30,6 +37,21 @@ const enrollmentSlice = createSlice({
 
 export const { setStatus, setEnrollment } = enrollmentSlice.actions;
 export default enrollmentSlice.reducer;
+
+export function enrollCourse(data: IEnrollmentData) {
+  return async function enrollCourseThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.post("/enrollment", data);
+      if (response.status === 200) {
+        dispatch(setStatus(Status.Success));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
 
 export function fetchEnrollments() {
   return async function fetchEnrollmentsThunk(dispatch: AppDispatch) {

@@ -5,14 +5,18 @@ import Modal from "./StudentCourseModal";
 
 function CourseCard({ course }: { course: ICourse }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const [courseId, setCourseId] = useState<string>("");
+  const openModal = useCallback((id: string) => {
+    setIsModalOpen(true);
+    setCourseId(id);
+  }, []);
 
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   return (
     <div className=" w-75 flex flex-col">
       <div className=" overflow-x-auto">
-        {isModalOpen && <Modal closeModal={closeModal} />}
+        {isModalOpen && <Modal closeModal={closeModal} courseId={courseId} />}
         <motion.div
           className="p-4 w-full max-w-sm"
           whileHover={{ y: -5 }}
@@ -60,7 +64,7 @@ function CourseCard({ course }: { course: ICourse }) {
               </div>
 
               <button
-                onClick={openModal}
+                onClick={() => openModal(course?._id as string)}
                 className="w-full py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors duration-300 flex items-center justify-center"
               >
                 <span>Enroll Now</span>

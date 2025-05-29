@@ -1,12 +1,13 @@
 import connectDb from "@/database/connection";
 import Category from "@/database/models/category.schema";
-import authMiddleware from "../../../../middleware/auth.middleware";
+
 import { NextRequest } from "next/server";
+import { adminAuth } from "../../../../middleware/admin-auth.middleware";
 
 export async function createCategory(req: Request) {
   try {
     await connectDb();
-    const response = await authMiddleware(req as NextRequest);
+    const response = await adminAuth(req as NextRequest);
 
     if (response.status === 401) {
       return response;
@@ -71,7 +72,7 @@ export async function getCategory(req: Request) {
 export async function deleteCategory(req: Request, id: string) {
   try {
     await connectDb();
-    const response = await authMiddleware(req as NextRequest);
+    const response = await adminAuth(req as NextRequest);
 
     if (response.status === 401) {
       return response;
@@ -106,7 +107,7 @@ export async function deleteCategory(req: Request, id: string) {
 export async function editCategory(req: Request, id: string) {
   try {
     connectDb();
-    const response = await authMiddleware(req as NextRequest);
+    const response = await adminAuth(req as NextRequest);
 
     if (response.status === 401) {
       return response;

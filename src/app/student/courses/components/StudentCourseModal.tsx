@@ -3,22 +3,26 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ChangeEvent, useEffect, useState } from "react";
 import { PaymentMethod } from "../../../../../types/enum";
+import { enrollCourse } from "@/store/enrollment/enrollmentSlice";
 
 interface IModalProps {
   closeModal: () => void;
+  courseId: string;
 }
 
-const Modal: React.FC<IModalProps> = ({ closeModal }) => {
+const Modal: React.FC<IModalProps> = ({ closeModal, courseId }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
     PaymentMethod.Khalti
   );
+  const [whatsapp, setWhatsapp] = useState<string>("");
   const dispatch = useAppDispatch();
+
+  console.log(courseId, "Course ko id");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // dispatch(addCategory();
+    dispatch(enrollCourse({ course: courseId, paymentMethod, whatsapp }));
   };
 
   const handlePaymentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -69,6 +73,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal }) => {
                 WhatsApp Number
               </label>
               <input
+                onChange={(e) => setWhatsapp(e.target.value)}
                 type="text"
                 id="website_url"
                 className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"

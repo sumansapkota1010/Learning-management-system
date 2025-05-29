@@ -8,21 +8,16 @@ enum Status {
 }
 
 interface IPayment extends Document {
-  student: mongoose.Types.ObjectId;
-  course: mongoose.Types.ObjectId;
   amount: number;
   status: Status;
   paymentMethod: PaymentMethod;
+  enrollment: mongoose.Types.ObjectId;
 }
 
 const paymentSchema = new Schema<IPayment>({
-  student: {
+  enrollment: {
     type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  course: {
-    type: Schema.Types.ObjectId,
-    ref: "Course",
+    ref: "Enrollment",
   },
   amount: {
     type: Number,
