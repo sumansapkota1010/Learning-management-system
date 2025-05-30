@@ -1,32 +1,42 @@
-import mongoose, { mongo, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { PaymentMethod } from "../../../types/enum";
 
-enum Status {
+export enum PaymentStatus {
   Pending = "pending",
   Completed = "completed",
   Failed = "failed",
 }
 
-interface IPayment extends Document {
+interface IPayment extends mongoose.Document {
   amount: number;
-  status: Status;
+  status: PaymentStatus;
   paymentMethod: PaymentMethod;
   enrollment: mongoose.Types.ObjectId;
+  pidx: string;
 }
 
 const paymentSchema = new Schema<IPayment>({
   enrollment: {
     type: Schema.Types.ObjectId,
     ref: "Enrollment",
+    required: false,
   },
+
   amount: {
     type: Number,
     required: true,
   },
   status: {
     type: String,
-    enum: [Status.Completed, Status.Pending, Status.Failed],
-    default: Status.Pending,
+    enum: [
+      PaymentStatus.Completed,
+      PaymentStatus.Pending,
+      PaymentStatus.Failed,
+    ],
+    default: PaymentStatus.Pending,
+  },
+  pidx: {
+    type: String,
   },
   paymentMethod: {
     type: String,

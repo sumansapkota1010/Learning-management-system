@@ -99,6 +99,13 @@ function Enrollments() {
                     {" "}
                     Whatsapp
                   </th>
+                  {/*   <th
+                    scope="col"
+                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
+                  >
+                    {" "}
+                    Payment Status
+                  </th> */}
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl"
@@ -140,6 +147,10 @@ function Enrollments() {
                           {" "}
                           {enrollment?.whatsapp}
                         </td>
+                        {/*    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                          {" "}
+                          {enrollment?.payment.status}
+                        </td> */}
 
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">

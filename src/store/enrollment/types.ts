@@ -1,5 +1,6 @@
 import { EnrollmentStatus } from "@/database/models/enrollment.schema";
 import { Status } from "../category/types";
+import { IPayment } from "../../../types/payment";
 
 interface IStudent {
   _id: string;
@@ -20,6 +21,7 @@ export interface IEnrollment {
   enrolledAt: string;
   enrollmentStatus: EnrollmentStatus;
   whatsapp: string;
+  payment: IPayment;
 }
 
 export interface IEnrollmentInitialState {
