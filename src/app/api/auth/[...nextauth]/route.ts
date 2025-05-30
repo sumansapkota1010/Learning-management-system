@@ -45,7 +45,7 @@ export const authOptions: AuthOptions = {
       if (user?.id) {
         token.id = user.id;
       }
-
+      console.log("token id", token);
       return token;
     },
 

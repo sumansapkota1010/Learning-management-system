@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 function Enrollments() {
   const { enrollments } = useAppSelector((state) => state.enrollment);
 
+  console.log(enrollments, "Enrollmentsss");
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -114,8 +116,14 @@ function Enrollments() {
                         key={enrollment?._id}
                         className="bg-white transition-all duration-500 hover:bg-gray-50"
                       >
-                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                          {enrollment?.student._id}{" "}
+                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                          {enrollment.student?._id ? (
+                            enrollment.student._id
+                          ) : (
+                            <span className="text-red-500">
+                              No student data
+                            </span>
+                          )}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}

@@ -23,14 +23,18 @@ export async function enrollCourse(req: Request) {
     const { course, whatsapp, paymentMethod } = await req.json();
 
     const session = await getServerSession(authOptions);
-    console.log(session, "Enroll session");
 
-    const studentId = session?.user._id;
+    if (!session?.user?.id) {
+      return Response.json(
+        { message: "User ID not found in session" },
+        { status: 401 }
+      );
+    }
 
     const enrolledCourse = await Enrollment.create({
       whatsapp,
       course,
-      student: studentId,
+      student: session.user.id,
     });
 
     const courseData = await Course.findById(course);
@@ -55,7 +59,6 @@ export async function enrollCourse(req: Request) {
           },
         }
       );
-      console.log(response, "Response");
       paymentUrl = response.data.payment_url;
 
       await Payment.create({
@@ -63,7 +66,6 @@ export async function enrollCourse(req: Request) {
         amount: courseData.price,
         paymentMethod: PaymentMethod.Khalti,
       });
-    } else {
     }
 
     return Response.json(
@@ -77,34 +79,36 @@ export async function enrollCourse(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
-    return Response.json(
-      {
-        message: "Something went wrong",
-      },
-      { status: 500 }
-    );
+    console.error("Enrollment error:", error);
+    return Response.json({ message: "Enrollment failed" }, { status: 500 });
   }
 }
 
 export async function fetchEnrollments(req: Request) {
   try {
     await connectDb();
-    const lessons = await Enrollment.find()
+    const data = await Enrollment.find()
       .populate("course")
-      .populate("student");
-    if (lessons.length == 0) {
+      .populate({
+        path: "student",
+        model: "User",
+        select: "_id username email",
+      })
+      .populate("");
+
+    console.log("Populated student:", data[0]?.student);
+    if (data.length === 0) {
       return Response.json(
         {
-          message: "No lesson  found",
+          message: "no enrollment found",
         },
         { status: 404 }
       );
     }
     return Response.json(
       {
-        message: "Lessons fetched successfully",
-        data: lessons,
+        message: "Enrollments fetched!!",
+        data,
       },
       { status: 200 }
     );
