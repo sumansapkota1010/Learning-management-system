@@ -1,10 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-
-export enum EnrollmentStatus {
-  Approved = "approved",
-  Rejected = "rejected",
-  Pending = "pending",
-}
+import { EnrollmentStatus } from "../../../types/enum";
 
 interface IEnrollment extends Document {
   student: mongoose.Types.ObjectId;

@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../category/types";
-import { EnrollmentStatus } from "@/database/models/enrollment.schema";
+
 import { IEnrollment, IEnrollmentInitialState } from "./types";
 import { AppDispatch } from "../store";
 import API from "@/http";
-import { stat } from "fs";
-import { PaymentMethod } from "../../../types/enum";
+
+import { EnrollmentStatus, PaymentMethod } from "../../../types/enum";
 
 const Datas: IEnrollmentInitialState = {
   enrollments: [],
@@ -90,6 +90,11 @@ export function editEnrollmentStatus(id: string, status: EnrollmentStatus) {
       const response = await API.patch(`/enrollment/${id}`, { status: status });
 
       console.log(response.data.data);
-    } catch (error) {}
+      return Promise.resolve();
+    } catch (error) {
+      dispatch(setStatus(Status.Error));
+      console.error("Error updating enrollment status:", error);
+      return Promise.reject(error);
+    }
   };
 }
