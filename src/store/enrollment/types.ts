@@ -1,6 +1,6 @@
-import { EnrollmentStatus } from "@/database/models/enrollment.schema";
 import { Status } from "../category/types";
 import { IPayment } from "../../../types/payment";
+import { EnrollmentStatus } from "../../../types/enum";
 
 interface IStudent {
   _id: string;

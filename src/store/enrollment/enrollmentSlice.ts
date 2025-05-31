@@ -98,3 +98,23 @@ export function editEnrollmentStatus(id: string, status: EnrollmentStatus) {
     }
   };
 }
+
+export function fetchMyApprovedEnrollments() {
+  return async function fetchMyApprovedEnrollmentsThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.get("/enrollment/approved", {
+        withCredentials: true,
+      });
+      console.log("My approved enrollments:", response.data.data);
+      if (response.status === 200) {
+        dispatch(setStatus(Status.Success));
+        dispatch(setEnrollment(response.data.data));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.error("Error fetching my approved enrollments:", error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}

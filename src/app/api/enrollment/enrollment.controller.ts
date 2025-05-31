@@ -2,7 +2,7 @@ import connectDb from "@/database/connection";
 import Course from "@/database/models/course.schema";
 import Enrollment from "@/database/models/enrollment.schema";
 
-import { PaymentMethod } from "../../../../types/enum";
+import { EnrollmentStatus, PaymentMethod } from "../../../../types/enum";
 import Payment, { PaymentStatus } from "@/database/models/payment.schema";
 import axios from "axios";
 import { getServerSession } from "next-auth";
@@ -177,6 +177,48 @@ export async function changeEnrollmentStatus(req: Request, id: string) {
       message: "Enrollment status updated",
       data,
     });
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function fetchMyEnrollments(req: Request) {
+  try {
+    await connectDb();
+
+    const response = await studentAuth(req as NextRequest);
+    if (response.status === 401) {
+      return response;
+    }
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return Response.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const myEnrollment = await Enrollment.find({
+      student: session.user.id,
+      enrollmentStatus: EnrollmentStatus.Approved,
+    }).populate("course");
+
+    if (!myEnrollment || myEnrollment.length === 0) {
+      return Response.json(
+        { message: "No enrollments found" },
+        { status: 404 }
+      );
+    }
+    return Response.json(
+      {
+        message: "My enrollments fetched successfully",
+        data: myEnrollment,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return Response.json(
