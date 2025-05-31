@@ -46,7 +46,10 @@ export default enrollmentSlice.reducer;
 export function enrollCourse(data: IEnrollmentData) {
   return async function enrollCourseThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.post("/enrollment", data);
+      const response = await API.post("/enrollment", data, {
+        withCredentials: true,
+      });
+      console.log("Enrollment response:", response.data.data);
       if (response.status === 200) {
         dispatch(setStatus(Status.Success));
         window.location.href = response.data.data.paymentUrl;

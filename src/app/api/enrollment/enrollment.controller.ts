@@ -93,6 +93,7 @@ export async function enrollCourse(req: Request) {
     return Response.json({ message: "Enrollment failed" }, { status: 500 });
   }
 }
+
 export async function fetchEnrollments(req: Request) {
   try {
     await connectDb();
