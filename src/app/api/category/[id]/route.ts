@@ -1,7 +1,8 @@
+import { NextRequest } from "next/server";
 import { deleteCategory, editCategory } from "../category.controller";
 
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
   const { id } = context.params;
@@ -9,7 +10,7 @@ export async function DELETE(
 }
 
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
   const { id } = context.params;
