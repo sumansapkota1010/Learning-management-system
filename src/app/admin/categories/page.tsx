@@ -8,6 +8,7 @@ import {
 } from "@/store/category/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Modal from "../components/modal/Modal";
+import Editmodal from "../components/modal/editModal";
 
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ function Categories() {
 
   const dispatch = useAppDispatch();
 
-  const { categories, status } = useAppSelector((store) => store.category);
+  const { categories } = useAppSelector((store) => store.category);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -71,6 +72,12 @@ function Categories() {
     <div className="flex flex-col">
       <div className="overflow-x-auto">
         {isModalOpen && <Modal closeModal={closeModal} />}
+        {isEditModalOpen && selectedCategoryId && (
+          <Editmodal
+            closeModal={closeEditModal}
+            categoryId={selectedCategoryId}
+          />
+        )}
         <div className="min-w-full inline-block align-middle">
           <div className="relative text-gray-500 focus-within:text-gray-900 mb-4">
             <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none">
