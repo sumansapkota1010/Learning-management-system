@@ -70,7 +70,10 @@ export async function getCategory(req: Request) {
   }
 }
 
-export async function deleteCategory(req: NextRequest, id: string) {
+export async function deleteCategory(
+  req: NextRequest,
+  id: string
+): Promise<NextResponse> {
   try {
     await connectDb();
 
@@ -83,24 +86,25 @@ export async function deleteCategory(req: NextRequest, id: string) {
     // Delete operation
     const deleted = await Category.findByIdAndDelete(id);
     if (!deleted) {
-      return new NextResponse(
-        JSON.stringify({ message: "Category not found" }),
+      return NextResponse.json(
+        { message: "Category not found" },
         { status: 404 }
       );
     }
 
-    return new NextResponse(
-      JSON.stringify({ message: "Category deleted successfully" }),
+    return NextResponse.json(
+      { message: "Category deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
     console.error("Delete category error:", error);
-    return new NextResponse(
-      JSON.stringify({ message: "Internal server error" }),
+    return NextResponse.json(
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
 }
+
 export async function editCategory(req: Request, id: string) {
   try {
     connectDb();
