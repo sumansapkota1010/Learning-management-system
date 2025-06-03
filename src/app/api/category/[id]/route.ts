@@ -4,7 +4,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
   return deleteCategory(request, id);
 }
 
@@ -12,6 +12,6 @@ export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
   return editCategory(request, id);
 }
