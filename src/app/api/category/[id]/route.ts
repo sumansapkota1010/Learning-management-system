@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { deleteCategory } from "../category.controller";
 
-export const DELETE = deleteCategory;
+export { DELETE } from "../category.controller";
 
 /* export async function PATCH(
   request: NextRequest,
