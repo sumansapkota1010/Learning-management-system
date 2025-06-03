@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteCategory, editCategory } from "../category.controller";
 
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }
-): Promise<NextResponse> {
-  return deleteCategory(req, context.params.id);
-}
+export const DELETE = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  return deleteCategory(request, params.id);
+};
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
