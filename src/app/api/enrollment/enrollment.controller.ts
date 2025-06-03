@@ -6,10 +6,10 @@ import { EnrollmentStatus, PaymentMethod } from "../../../../types/enum";
 import Payment, { PaymentStatus } from "@/database/models/payment.schema";
 import axios from "axios";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 
 import { studentAuth } from "../../../../middleware/student-auth.middleware";
 import { NextRequest } from "next/server";
+import { authOptions } from "@/app/lib/auth";
 
 export async function enrollCourse(req: Request) {
   try {

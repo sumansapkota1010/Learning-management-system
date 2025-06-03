@@ -1,5 +1,6 @@
 // middleware/student-auth.ts
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+import { authOptions } from "@/app/lib/auth";
 import { Role } from "@/database/models/user.schema";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
