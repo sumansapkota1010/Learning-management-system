@@ -1,3 +1,5 @@
+"use client";
+
 import { ICourse } from "@/store/course/types";
 import { motion } from "framer-motion";
 import { useCallback, useState } from "react";

@@ -72,6 +72,10 @@ type Data = {
   description: string;
 };
 
+export function fetchCategoryById(id: string) {
+  return async function fetchCategoryByIdThunk(dispatch: AppDispatch) {};
+}
+
 export function addCategory(data: Data) {
   return async function addCategoryThunk(dispatch: AppDispatch) {
     try {
