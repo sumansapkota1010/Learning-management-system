@@ -27,6 +27,11 @@ const categorySlice = createSlice({
         (category) => category._id !== action.payload
       );
     },
+    updateCategory(state, action) {
+      state.categories = state.categories.map((category) =>
+        category._id === action.payload._id ? action.payload : category
+      );
+    },
     resetStatus(state) {
       state.status = Status.Loading;
     },
@@ -38,6 +43,7 @@ export const {
   setCategories,
   resetStatus,
   addCategories,
+  updateCategory,
   deleteCategoryByFilter,
 } = categorySlice.actions;
 
@@ -90,6 +96,23 @@ export function deleteCategory(id: string) {
       if (response.status == 200) {
         dispatch(setStatus(Status.Success));
         dispatch(deleteCategoryByFilter(id));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+export function editCategory(id: string, data: Data) {
+  return async function editCategoryThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.patch(`/category/${id}`, data);
+      if (response.status === 201) {
+        dispatch(setStatus(Status.Success));
+        dispatch(updateCategory(response.data.data));
       } else {
         dispatch(setStatus(Status.Error));
       }

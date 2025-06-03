@@ -2,16 +2,20 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import Modal from "../components/modal/Modal";
 import {
   deleteCategory,
   fetchCategories,
 } from "@/store/category/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import Modal from "../components/modal/Modal";
 
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
 
   const dispatch = useAppDispatch();
 
@@ -24,6 +28,23 @@ function Categories() {
   const openModal = useCallback(() => setIsModalOpen(true), []);
 
   const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const openEditModal = useCallback(
+    (id: string) => {
+      setIsEditModalOpen(true),
+        setSelectedCategoryId(id),
+        dispatch(fetchCategories());
+    },
+    [dispatch]
+  );
+  const closeEditModal = useCallback(() => {
+    setIsEditModalOpen(false);
+    setSelectedCategoryId(null);
+  }, []);
 
   /* const openModalRef = useRef<() => void | null>(null);
   if (openModalRef.current) {
@@ -165,7 +186,10 @@ function Categories() {
                       </td>
                       <td className=" p-5 ">
                         <div className="flex items-center gap-1">
-                          <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
+                          <button
+                            onClick={openModal}
+                            className="p-2  rounded-full  group transition-all duration-500  flex item-center"
+                          >
                             <svg
                               className="cursor-pointer"
                               width={20}

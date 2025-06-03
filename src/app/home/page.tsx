@@ -3,7 +3,7 @@ import { stat } from "fs";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 function Home() {
-  const { data: session, status } = useSession(); // useSelector() --> select * from users
+  const { data: session, status } = useSession();
 
   if (session) {
     return (
