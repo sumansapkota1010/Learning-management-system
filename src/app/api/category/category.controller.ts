@@ -1,7 +1,7 @@
 import connectDb from "@/database/connection";
 import Category from "@/database/models/category.schema";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { adminAuth } from "../../../../middleware/admin-auth.middleware";
 
 export async function createCategory(req: Request) {
@@ -70,34 +70,36 @@ export async function getCategory(req: Request) {
   }
 }
 
-export async function deleteCategory(
-  req: NextRequest,
-  id: string
-): Promise<NextResponse> {
+export async function deleteCategory(req: Request, id: string) {
   try {
     await connectDb();
-    const authCheckResponse = await adminAuth(req);
+    const response = await adminAuth(req as NextRequest);
 
-    if (!authCheckResponse.ok || authCheckResponse.status === 401) {
-      if (authCheckResponse instanceof NextResponse) return authCheckResponse;
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    if (response.status === 401) {
+      return response;
     }
 
     const deleted = await Category.findByIdAndDelete(id);
     if (!deleted) {
-      return NextResponse.json(
-        { message: "Category not found or could not be deleted" },
-        { status: 404 }
+      return Response.json(
+        {
+          message: "Something went wrong",
+        },
+        { status: 400 }
       );
     }
-    return NextResponse.json(
-      { message: "Category deleted successfully" },
+    return Response.json(
+      {
+        message: "Category Deleted Successfully",
+      },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in deleteCategoryController:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
+    console.log(error);
+    return Response.json(
+      {
+        message: "Something went wrong",
+      },
       { status: 500 }
     );
   }
