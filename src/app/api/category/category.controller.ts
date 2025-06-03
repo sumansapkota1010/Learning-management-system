@@ -71,24 +71,26 @@ export async function getCategory(req: Request) {
 }
 
 export async function deleteCategory(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     await connectDb();
-    const response = await adminAuth(req);
+    const response = await adminAuth(request);
 
     if (response.status === 401) {
       return response;
     }
 
-    const deleted = await Category.findByIdAndDelete(params.id);
+    const deleted = await Category.findByIdAndDelete(context.params.id);
+
     if (!deleted) {
       return Response.json(
         { message: "Something went wrong" },
         { status: 400 }
       );
     }
+
     return Response.json(
       { message: "Category Deleted Successfully" },
       { status: 200 }
@@ -98,7 +100,6 @@ export async function deleteCategory(
     return Response.json({ message: "Something went wrong" }, { status: 500 });
   }
 }
-
 export async function editCategory(req: Request, id: string) {
   try {
     connectDb();
