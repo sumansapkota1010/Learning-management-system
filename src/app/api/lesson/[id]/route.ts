@@ -4,7 +4,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
 
   return deleteLesson(req, id);
 }
@@ -13,6 +13,6 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
   return fetchLesson(req, id);
 }
