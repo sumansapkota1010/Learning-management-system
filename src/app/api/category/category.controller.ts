@@ -70,38 +70,32 @@ export async function getCategory(req: Request) {
   }
 }
 
-export async function deleteCategory(req: Request, id: string) {
+export async function deleteCategory(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await connectDb();
-    const response = await adminAuth(req as NextRequest);
+    const response = await adminAuth(req);
 
     if (response.status === 401) {
       return response;
     }
 
-    const deleted = await Category.findByIdAndDelete(id);
+    const deleted = await Category.findByIdAndDelete(params.id);
     if (!deleted) {
       return Response.json(
-        {
-          message: "Something went wrong",
-        },
+        { message: "Something went wrong" },
         { status: 400 }
       );
     }
     return Response.json(
-      {
-        message: "Category Deleted Successfully",
-      },
+      { message: "Category Deleted Successfully" },
       { status: 200 }
     );
   } catch (error) {
     console.log(error);
-    return Response.json(
-      {
-        message: "Something went wrong",
-      },
-      { status: 500 }
-    );
+    return Response.json({ message: "Something went wrong" }, { status: 500 });
   }
 }
 
