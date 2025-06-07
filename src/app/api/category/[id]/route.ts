@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteCategory, editCategory } from "../category.controller";
 
-type RouteContext = {
-  params: {
-    id: string;
-  };
-};
+export async function DELETE(
+  request: NextRequest,
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
+  context: { params: { id: string } }
+) {
   const { id } = context.params;
   return deleteCategory(request, id);
 }
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(
+  request: NextRequest,
+
+  context: { params: { id: string } }
+) {
   const { id } = context.params;
   return editCategory(request, id);
 }
