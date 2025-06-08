@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
-import CourseCard from "./components/page";
+import CourseCard from "./components/CourseCard";
 import { fetchCourses } from "@/store/course/courseSlice";
 
 function Courses() {
