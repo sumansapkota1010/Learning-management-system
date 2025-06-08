@@ -10,7 +10,7 @@ import {
   VideoCameraIcon,
 } from "@heroicons/react/24/solid";
 
-export function Lessons() {
+export default function Lessons() {
   const params = useParams();
   const courseId = params.id;
   const [loading, setLoading] = useState<boolean>(false);
@@ -145,5 +145,3 @@ export function Lessons() {
     </div>
   );
 }
-
-export default Lessons;
