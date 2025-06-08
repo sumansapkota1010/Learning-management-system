@@ -2,7 +2,7 @@ import { Status } from "../category/types";
 import { ICourse } from "../course/types";
 
 export interface ILessonForData {
-  course: ICourse;
+  course: string;
   videoUrl: string;
   title: string;
   description: string;
