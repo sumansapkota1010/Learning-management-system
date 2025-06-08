@@ -6,8 +6,6 @@ import CourseCard from "./components/page";
 import { fetchCourses } from "@/store/course/courseSlice";
 
 function Courses() {
-  4;
-
   const dispatch = useAppDispatch();
   const { courses } = useAppSelector((state) => state.course);
 
