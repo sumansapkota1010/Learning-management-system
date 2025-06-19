@@ -112,27 +112,26 @@ type Data ={
     
 }
 
-
-export function editCourse(id:string,data:Data){
-  return async function editCourseThunk (dispatch:AppDispatch){
+export function editCourse(id: string, data: Data) {
+  return async function editCourseThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.patch(`/course/${id}`,data)
-      console.log(response.data.data)
-      if(response.status =200){
-        dispatch(setStatus(Status.Success))
-        dispatch(updateCourse(response.data.data))
-      }
-      else{
-        dispatch(setStatus(Status.Error))
+      const response = await API.patch(`/course/${id}`, data);
+      console.log(response.data.data);
+      
+      if (response.status === 200) {
+        dispatch(setStatus(Status.Success));
+        // Refresh the entire courses list to ensure consistency
+        dispatch(fetchCourses());
+      } else {
+        dispatch(setStatus(Status.Error));
       }
     } catch (error) {
-      console.log(error)
-       dispatch(setStatus(Status.Error))
-      
+      console.log(error);
+      dispatch(setStatus(Status.Error));
     }
   }
-
 }
+
 
 export function deleteCourses(id: string) {
   return async function deteteCoursesThunk(dispatch: Dispatch) {
