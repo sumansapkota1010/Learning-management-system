@@ -77,19 +77,7 @@ const Modal: React.FC<IModalProps> = ({ closeModal, courseId }) => {
           </button>
         </div>
         <form onSubmit={createLessonHandler} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Course
-            </label>
-            <input
-              type="text"
-              name="course"
-              onChange={handleChange}
-              placeholder="e.g. React, Express"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-              required
-            />
-          </div>
+      
 
           <div className="flex justify-between">
             <div>

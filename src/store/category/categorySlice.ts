@@ -53,6 +53,8 @@ export function fetchCategories() {
   return async function fetchCategoriesThunk(dispatch: AppDispatch) {
     try {
       const response = await API.get("/category");
+      console.log(response.data.data,"Responseeeee")
+      console.log(typeof(response.data.data),"Typeee")
       if (response.status == 200) {
         /*     dispatch(setStatus(Status.Success)); */
 
@@ -72,9 +74,23 @@ type Data = {
   description: string;
 };
 
-export function fetchCategoryById(id: string) {
-  return async function fetchCategoryByIdThunk(dispatch: AppDispatch) {};
+export function fetchCategoriesById(id:string){
+  return async function fetchCategoriesByIdThunk(dispatch:AppDispatch){
+    try {
+      const response = await API.get("/category/"+id)
+      if(response.status ===200){
+        return response.data.data
+      } else{
+        dispatch(setStatus(Status.Error))
+      }
+    } catch (error) {
+      console.log(error)
+      dispatch(setStatus(Status.Error))
+      
+    }
+  }
 }
+
 
 export function addCategory(data: Data) {
   return async function addCategoryThunk(dispatch: AppDispatch) {
@@ -116,7 +132,7 @@ export function editCategory(id: string, data: Data) {
       const response = await API.patch(`/category/${id}`, data);
       if (response.status === 201) {
         dispatch(setStatus(Status.Success));
-        dispatch(updateCategory(response.data.data));
+        dispatch(updateCategory(response.data.data)); 
       } else {
         dispatch(setStatus(Status.Error));
       }

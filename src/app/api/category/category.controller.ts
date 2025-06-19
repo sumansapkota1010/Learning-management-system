@@ -3,6 +3,7 @@ import Category from "@/database/models/category.schema";
 
 import { NextRequest } from "next/server";
 import { adminAuth } from "../../../../middleware/admin-auth.middleware";
+import { data } from "framer-motion/client";
 
 export async function createCategory(req: Request) {
   try {
@@ -67,6 +68,27 @@ export async function getCategory(req: Request) {
       },
       { status: 500 }
     );
+  }
+}
+
+export async function getCategoryById(req:Request,id:string){
+  try {
+    await connectDb();
+    const singleCategory = await Category.findById(id)
+    if(!singleCategory){
+      return Response.json({
+        message:"No single category found"
+      },{status:401})
+    }
+    return Response.json({
+      message:"Single category fetched successfully",
+      data: singleCategory
+    },{status:200})
+  } catch (error) {
+    return Response.json({
+      message:"Something went wrong"
+    },{status:500})
+    
   }
 }
 

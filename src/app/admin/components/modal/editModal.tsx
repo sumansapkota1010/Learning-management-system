@@ -1,6 +1,6 @@
 "use client";
 
-import { editCategory, resetStatus } from "@/store/category/categorySlice";
+import { editCategory, fetchCategoriesById, resetStatus } from "@/store/category/categorySlice";
 import { Status } from "@/store/category/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
@@ -15,21 +15,43 @@ const Editmodal: React.FC<IModalProps> = ({ closeModal, categoryId }) => {
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
+  console.log(name,"Name k ho")
+
   const dispatch = useAppDispatch();
-  const { status } = useAppSelector((state) => state.category);
+  const { status,categories } = useAppSelector((state) => state.category);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    /* dispatch(editCategory({ name, description })); */
+    dispatch(editCategory(categoryId,{ name, description }));
   };
+
+  useEffect(()=>{
+        const loadCategory = async() =>{
+          try {
+            const category = await dispatch(fetchCategoriesById(categoryId))
+            console.log("Category by Id",category)
+            if(category){
+              setName(category.name)
+              setDescription(category.description)
+            }
+            
+          } catch (error) {
+            console.log(error)
+            
+          }
+        }
+        loadCategory()
+  },[dispatch])
 
   useEffect(() => {
     if (status === Status.Success) {
+ 
       setLoading(false);
       closeModal();
       dispatch(resetStatus());
     }
+    
   }, [status]);
 
   return (

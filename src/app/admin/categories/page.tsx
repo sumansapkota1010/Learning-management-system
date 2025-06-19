@@ -22,6 +22,7 @@ function Categories() {
 
   const { categories } = useAppSelector((store) => store.category);
 
+
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
@@ -194,7 +195,7 @@ function Categories() {
                       <td className=" p-5 ">
                         <div className="flex items-center gap-1">
                           <button
-                            onClick={openModal}
+                            onClick={()=> openEditModal(category._id)}
                             className="p-2  rounded-full  group transition-all duration-500  flex item-center"
                           >
                             <svg
