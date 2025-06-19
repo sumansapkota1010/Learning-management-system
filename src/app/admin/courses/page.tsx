@@ -5,10 +5,15 @@ import Modal from "./components/courseModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { deleteCourses, fetchCourses } from "@/store/course/courseSlice";
 import { redirect } from "next/navigation";
+import Editmodal from "./components/editModal";
 
 function Courses() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen,setIsEditModalOpen ] = useState(false)
   const [searchText, setSearchText] = useState("");
+  const [selectedCourseId,setSelectedCourseId] =useState<string | null>(
+    null
+  );
   const dispatch = useAppDispatch();
 
   const { courses, status } = useAppSelector((state) => state.course);
@@ -19,6 +24,19 @@ function Courses() {
   const openModal = useCallback(() => setIsModalOpen(true), []);
 
   const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+const openEditModal = useCallback(
+    (id: string) => {
+      setIsEditModalOpen(true),
+        setSelectedCourseId(id),
+        dispatch(fetchCourses());
+    },
+    [dispatch]
+  );
+  const closeEditModal = useCallback(() => {
+    setIsEditModalOpen(false);
+    setSelectedCourseId(null);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchCourses());
@@ -39,6 +57,12 @@ function Courses() {
     <div className="flex flex-col">
       <div className="overflow-x-auto">
         {isModalOpen && <Modal closeModal={closeModal} />}
+        {isEditModalOpen && selectedCourseId && (
+          <Editmodal
+            closeModal={closeEditModal}
+            courseId={selectedCourseId}
+          />
+        )}
         <div className="min-w-full inline-block align-middle">
           <div className="relative text-gray-500 focus-within:text-gray-900 mb-4">
             <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none">
@@ -163,7 +187,9 @@ function Courses() {
                         </td>
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">
-                            <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
+                            <button 
+                            onClick={()=> openEditModal(course._id as string)}
+                            className="p-2  rounded-full  group transition-all duration-500  flex item-center">
                               <svg
                                 className="cursor-pointer"
                                 width={20}

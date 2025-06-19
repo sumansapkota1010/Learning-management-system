@@ -1,6 +1,6 @@
 import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../category/types";
-import { ICourse, ICourseInitialState } from "./types";
+import { ICategory, ICourse, ICourseInitialState } from "./types";
 import { AppDispatch } from "../store";
 
 import API from "@/http";
@@ -24,6 +24,9 @@ const courseSlice = createSlice({
     addCourse(state: ICourseInitialState, action: PayloadAction<ICourse>) {
       state.courses.push(action.payload);
     },
+    updateCourse(state:ICourseInitialState,action:PayloadAction<ICourse>){
+      state.courses = state.courses.map((course)=> course._id ===action.payload._id? action.payload : course)
+    },
     deleteCourseByFilter(
       state: ICourseInitialState,
       action: PayloadAction<string>
@@ -42,6 +45,7 @@ export const {
   setStatus,
   setCourses,
   addCourse,
+  updateCourse,
   deleteCourseByFilter,
   resetCourseStatus,
 } = courseSlice.actions;
@@ -52,7 +56,7 @@ export function fetchCourses() {
   return async function fetchCoursesThunk(dispatch: AppDispatch) {
     try {
       const response = await API.get("/course");
-      console.log(response, "Response");
+      
       if (response.status === 200) {
         dispatch(setCourses(response.data.data));
       }
@@ -61,6 +65,24 @@ export function fetchCourses() {
       dispatch(setStatus(Status.Error));
     }
   };
+}
+
+export function fetchSingleCourse(id:string){
+  return async function fetchSingleCourseThunk(dispatch:AppDispatch){
+    try {
+      const response = await API.get("/course/"+id)
+      console.log(response,"Single Course")
+      if(response.status ===200){
+        return response.data.data
+      } else{
+         dispatch(setStatus(Status.Error))
+      }
+
+    } catch (error) {
+      console.log(error)
+       dispatch(setStatus(Status.Error))
+    }
+  }
 }
 
 export function addCourses(data: ICourse) {
@@ -78,6 +100,38 @@ export function addCourses(data: ICourse) {
       dispatch(setStatus(Status.Error));
     }
   };
+}
+
+type Data ={
+  _id?: string;
+    title: string;
+    description: string;
+    price: number;
+    duration: string;
+    category: ICategory;
+    
+}
+
+
+export function editCourse(id:string,data:Data){
+  return async function editCourseThunk (dispatch:AppDispatch){
+    try {
+      const response = await API.patch(`/course/${id}`,data)
+      console.log(response.data.data)
+      if(response.status =200){
+        dispatch(setStatus(Status.Success))
+        dispatch(updateCourse(response.data.data))
+      }
+      else{
+        dispatch(setStatus(Status.Error))
+      }
+    } catch (error) {
+      console.log(error)
+       dispatch(setStatus(Status.Error))
+      
+    }
+  }
+
 }
 
 export function deleteCourses(id: string) {
